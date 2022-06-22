@@ -5,6 +5,5 @@ import lombok.Getter;
 
 @Getter
 public class LogInRequest {
-    private String email;
-    private String password;
+    private String kakaoToken;
 }
