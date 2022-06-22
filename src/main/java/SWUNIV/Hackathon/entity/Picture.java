@@ -37,11 +37,4 @@ public class Picture extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat_id")
     private Cat cat;
-
-    public double distance(DMS lat, DMS lon) {
-        DMS difflat = latitude.diffAbs(lat);
-        DMS difflon = longitude.diffAbs(lon);
-        return Math.sqrt(difflat.latitudeToMeterIn35Degree()
-                         + difflon.longitudeToMeterIn35Degree());
-    }
 }
