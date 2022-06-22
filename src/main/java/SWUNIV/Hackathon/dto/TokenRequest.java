@@ -4,6 +4,6 @@ package SWUNIV.Hackathon.dto;
 import lombok.Getter;
 
 @Getter
-public class LogInRequest {
+public class TokenRequest {
     private String kakaoToken;
 }
