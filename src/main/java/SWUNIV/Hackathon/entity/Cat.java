@@ -1,9 +1,6 @@
 package SWUNIV.Hackathon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -27,13 +24,13 @@ public class Cat extends BaseEntity {
     @AttributeOverride(name="_1", column = @Column(name = "latitude_1"))
     @AttributeOverride(name="_2", column = @Column(name = "latitude_2"))
     @AttributeOverride(name="_3", column = @Column(name = "latitude_3"))
-    private DMS latitude;
+    @Setter private DMS latitude;
 
     @Embedded
     @AttributeOverride(name="_1", column = @Column(name = "longitude_1"))
     @AttributeOverride(name="_2", column = @Column(name = "longitude_2"))
     @AttributeOverride(name="_3", column = @Column(name = "longitude_3"))
-    private DMS longitude;
+    @Setter private DMS longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
@@ -43,4 +40,11 @@ public class Cat extends BaseEntity {
     private Collection<Picture> pictures;
     @OneToMany(mappedBy = "cat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Article> articles;
+
+    public double distance(DMS lat, DMS lon) {
+        DMS difflat = latitude.diffAbs(lat);
+        DMS difflon = longitude.diffAbs(lon);
+        return Math.sqrt(difflat.latitudeToMeterIn35Degree()
+                + difflon.longitudeToMeterIn35Degree());
+    }
 }
