@@ -1,71 +1,178 @@
 package SWUNIV.Hackathon.service;
 
-import SWUNIV.Hackathon.dto.EmailRequest;
-import SWUNIV.Hackathon.dto.LogInRequest;
+import SWUNIV.Hackathon.dto.BooleanResponse;
+import SWUNIV.Hackathon.dto.TokenRequest;
 import SWUNIV.Hackathon.dto.SignUpRequest;
-import SWUNIV.Hackathon.dto.StringResponse;
-import SWUNIV.Hackathon.dto.UserMapper;
+import SWUNIV.Hackathon.dto.UniversityResponse;
 import SWUNIV.Hackathon.dto.UserResponse;
-import SWUNIV.Hackathon.exception.DuplicateEmailException;
-import SWUNIV.Hackathon.exception.DuplicateNicknameException;
-import SWUNIV.Hackathon.exception.InvalidPasswordException;
-import SWUNIV.Hackathon.exception.InvalidUserException;
+import SWUNIV.Hackathon.enumerations.Authority;
+import SWUNIV.Hackathon.enumerations.University;
+import SWUNIV.Hackathon.exception.InvalidKakaoTokenException;
 import SWUNIV.Hackathon.repository.UserRepository;
-import SWUNIV.Hackathon.util.JwtUtil;
-import SWUNIV.Hackathon.auth.TokenInfo;
 import SWUNIV.Hackathon.entity.User;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
 
-    public StringResponse checkEmailAvailability(EmailRequest emailRequest) {
-        if (userRepository.existsByEmail(emailRequest.getEmail())) throw new DuplicateEmailException();
+    public JsonObject getUserDataFromKakaoToken(String token) throws InvalidKakaoTokenException {
 
-        return new StringResponse("사용가능한 이메일입니다");
+        String reqURL = "https://kapi.kakao.com/v2/user/me";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+
+        RestTemplate rt = new RestTemplate();
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
+            new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = rt.exchange(
+            reqURL,
+            HttpMethod.GET,
+            kakaoTokenRequest,
+            String.class
+        );
+
+        String json = response.getBody();
+
+        System.out.println("json = " + json);
+        return JsonParser.parseString(json).getAsJsonObject();
     }
 
     @Transactional
-    public UserResponse signUp(SignUpRequest signUpRequest) {
+    public BooleanResponse signUp(SignUpRequest signUpRequest) {
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) throw new DuplicateEmailException(); // 혹시 모름
-        if (userRepository.existsByNickname(signUpRequest.getNickname())) throw new DuplicateNicknameException();
+        final String accessToken = signUpRequest.getAccessToken();
 
-        signUpRequest.setPassword(authService.encodePassword(signUpRequest.getPassword()));
+        System.out.println("accessToken = " + accessToken);
 
-        final User user = UserMapper.INSTANCE.requestToUser(signUpRequest);
+        JsonObject jsonObject = getUserDataFromKakaoToken(accessToken);
+
+        if (jsonObject.isJsonNull()) throw new InvalidKakaoTokenException();
+
+        String id = jsonObject.get("id").getAsString();
+
+        JsonObject kakaoAccount = jsonObject
+            .get("kakao_account").getAsJsonObject();
+
+        JsonObject kakaoProfile = kakaoAccount
+            .get("profile").getAsJsonObject();
+
+        boolean hasEmail = kakaoAccount
+            .get("has_email").getAsBoolean();
+
+        String email = "";
+
+        if(hasEmail){
+            email = kakaoAccount.get("email").getAsString();
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            return new BooleanResponse(false);
+        }
+
+        final User user = User.builder()
+            .name(kakaoProfile.get("nickname").getAsString())
+            .kakaoID(id)
+            .accessToken(accessToken)
+            .authority(Authority.GUEST)
+            .picturePath(kakaoProfile.get("profile_image_url").getAsString())
+            .university(University.valueOf(signUpRequest.getUniversity()))
+            .email(email)
+            .build();
+
         final User savedUser = userRepository.save(user);
 
-        UserResponse userResponse = UserMapper.INSTANCE.userToResponse(savedUser);
-        userResponse.setTokenResponse(jwtUtil.generateToken(getTokenInfo(savedUser)));
-
-        return userResponse;
+        return new BooleanResponse(true);
     }
 
-    public UserResponse logIn(LogInRequest logInRequest) {
+    public BooleanResponse logIn(TokenRequest tokenRequest) {
 
-        if (!userRepository.existsByEmail(logInRequest.getEmail())) throw new InvalidUserException();
+        final String kakaoToken = tokenRequest.getKakaoToken();
 
-        final User user = userRepository.findUserByEmail(logInRequest.getEmail());
+        JsonObject jsonObject = getUserDataFromKakaoToken(kakaoToken);
 
-        if (!passwordEncoder.matches(logInRequest.getPassword(), user.getPassword())) throw new InvalidPasswordException();
+        if (jsonObject.isJsonNull()) throw new InvalidKakaoTokenException();
 
-        UserResponse userResponse = UserMapper.INSTANCE.userToResponse(user);
-        userResponse.setTokenResponse(jwtUtil.generateToken(getTokenInfo(user)));
+        String id = jsonObject.get("id").getAsString();
 
-        return userResponse;
+        JsonObject kakaoAccount = jsonObject
+            .get("kakao_account").getAsJsonObject();
+
+        boolean hasEmail = kakaoAccount
+            .get("has_email").getAsBoolean();
+
+        String email = "";
+
+        if(hasEmail){
+            email = kakaoAccount.get("email").getAsString();
+        }
+
+        if (!userRepository.existsByEmail(email)) return new BooleanResponse(false);
+
+        User user = userRepository.findUserByEmail(email);
+
+        if (!user.getKakaoID().equals(id)) {
+            System.out.println("user.getUserID() = " + user.getKakaoID());
+            System.out.println("id = " + id);
+            return new BooleanResponse(false);
+        }
+
+        user.setAccessToken(kakaoToken);
+
+        final User savedUser = userRepository.save(user);
+
+        return new BooleanResponse(true);
     }
 
-    private TokenInfo getTokenInfo(User user) { // 이거 JwtUtil로 돌릴지
-        return new TokenInfo(user.getId(), user.getEmail(), user.getAuthority());
+    public UniversityResponse getUniversities() {
+        List<String> universities = new ArrayList<>();
+
+        for (University university : University.values()) {
+            universities.add(university.getValue());
+        }
+
+        return new UniversityResponse(universities);
+    }
+
+    public UserResponse me(TokenRequest tokenRequest) {
+
+        final String kakaoToken = tokenRequest.getKakaoToken();
+
+        JsonObject jsonObject = getUserDataFromKakaoToken(kakaoToken);
+
+        if (jsonObject.isJsonNull()) throw new InvalidKakaoTokenException();
+
+        String id = jsonObject.get("id").getAsString();
+
+        User user = userRepository.findUserByKakaoID(id);
+
+        final UserResponse userResponse = UserResponse.builder()
+            .name(user.getName())
+            .email(user.getEmail())
+            .picturePath(user.getPicturePath())
+            .university(user.getUniversity())
+            .build();
+
+        return userResponse;
     }
 }

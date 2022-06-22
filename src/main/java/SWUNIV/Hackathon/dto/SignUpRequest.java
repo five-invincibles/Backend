@@ -4,23 +4,15 @@ import SWUNIV.Hackathon.enumerations.Gender;
 import java.util.Date;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@AllArgsConstructor
 public class SignUpRequest {
 
-    private String email;
+    private String accessToken;
 
-    @Setter
-    private String password;
-
-    private String name;
-
-    private String nickname;
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    private Date birthday;
+    private String university;
 }
