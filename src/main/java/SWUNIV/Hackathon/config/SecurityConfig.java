@@ -24,6 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 폼 기반 로그인 비활성화
             .formLogin()
             .disable();
+        // h2 console 접근 가능하게
+        httpSecurity.headers().frameOptions().disable();
     }
 
     @Bean
