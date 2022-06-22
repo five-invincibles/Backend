@@ -12,6 +12,12 @@ public class DMS implements Comparable<DMS> {
     int _1, _2;
     double _3;
 
+    public int getDegree() {
+        return _1;
+    }
+    public int getMinute() {
+        return _2;
+    }
     /**
      * 도,분,초로 나타낸 각도를 표현하는 DMS 객체를 생성한다.
      * @param $1 도(degree)
