@@ -21,18 +21,27 @@ public class Picture extends BaseEntity {
     private String path;
     private String title;
     private LocalDateTime uploadedDate;
-    private Double uploadedLatitude;
-    private Double uploadedLongitude;
+
+    @Embedded
+    @AttributeOverride(name="_1", column = @Column(name = "latitude_1"))
+    @AttributeOverride(name="_2", column = @Column(name = "latitude_2"))
+    @AttributeOverride(name="_3", column = @Column(name = "latitude_3"))
+    private DMS latitude;
+
+    @Embedded
+    @AttributeOverride(name="_1", column = @Column(name = "longitude_1"))
+    @AttributeOverride(name="_2", column = @Column(name = "longitude_2"))
+    @AttributeOverride(name="_3", column = @Column(name = "longitude_3"))
+    private DMS longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat_id")
     private Cat cat;
 
-    public double distance(double currentLatitude, double currentLongitude) {
-        double diffLatitude = currentLatitude - uploadedLatitude;
-        double diffLongitude = currentLongitude - uploadedLongitude;
-        double squareLatitude = diffLatitude*diffLatitude;
-        double squareLongitude = diffLongitude*diffLongitude;
-        return Math.sqrt(squareLatitude + squareLongitude);
+    public double distance(DMS lat, DMS lon) {
+        DMS difflat = latitude.diffAbs(lat);
+        DMS difflon = longitude.diffAbs(lon);
+        return Math.sqrt(difflat.latitudeToMeterIn35Degree()
+                         + difflon.longitudeToMeterIn35Degree());
     }
 }
