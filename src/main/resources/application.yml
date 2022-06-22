@@ -3,6 +3,10 @@ server:
 
 spring:
   datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/catureDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#    username: cature
+#    password: cature1#$
     driver-class-name: org.h2.Driver
     url: jdbc:h2:../test
     username: Cature
@@ -28,6 +32,19 @@ spring:
       authority: ath
       email: eml
       platform-id: pid
+  servlet:
+    multipart:
+      max-file-size: 3MB
+
+
+
+  minio:
+    url: http://49.50.172.68:9001
+    bucket: cature
+    access-key: minioadmin
+    secret-key: minioadmin
+
+
 
 loggin.level:
   org.hibernate.type: trace
