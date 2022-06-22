@@ -1,7 +1,9 @@
 package SWUNIV.Hackathon.dto;
 
 import SWUNIV.Hackathon.auth.TokenResponse;
+import SWUNIV.Hackathon.enumerations.Authority;
 import SWUNIV.Hackathon.enumerations.Gender;
+import SWUNIV.Hackathon.enumerations.University;
 import java.util.Date;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,17 +19,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserResponse {
 
-    private String email;
-
     private String name;
 
-    private String nickname;
+    private String picturePath;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private University university;
 
-    private Date birthday;
-
-    @Setter
-    private TokenResponse tokenResponse;
+    private String email;
 }

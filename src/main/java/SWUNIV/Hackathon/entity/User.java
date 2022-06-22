@@ -1,8 +1,7 @@
 package SWUNIV.Hackathon.entity;
 
 import SWUNIV.Hackathon.enumerations.Authority;
-import SWUNIV.Hackathon.enumerations.Gender;
-import java.util.Date;
+import SWUNIV.Hackathon.enumerations.University;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,20 +20,19 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class User extends BaseEntity{
 
-    private String email;
-
-    @Setter
-    private String password;
-
     private String name;
 
-    private String nickname;
+    private String kakaoID;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    private Date birthday;
+    @Setter
+    private String accessToken;
 
     @Enumerated(EnumType.STRING)
     private Authority authority = Authority.USER;
+
+    private String picturePath;
+
+    private University university;
+
+    private String email;
 }
