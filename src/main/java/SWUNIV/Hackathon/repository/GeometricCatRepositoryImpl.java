@@ -3,13 +3,17 @@ package SWUNIV.Hackathon.repository;
 import SWUNIV.Hackathon.entity.Cat;
 import SWUNIV.Hackathon.entity.DMS;
 import SWUNIV.Hackathon.entity.Picture;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
 public class GeometricCatRepositoryImpl implements GeometricCatRepository {
     @Autowired
+    @Lazy
     CatRepository catRepository;
 
     @Override

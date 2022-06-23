@@ -13,4 +13,5 @@ import java.util.List;
 public interface ArticleRepository extends CrudRepository<Article, Long> {
     Page<Article> findAll(Pageable pageable);
     Page<Article> findByAuthorKakaoID(String kakaoID, Pageable pageable);
+    Page<Article> findByCatId(Long catId, Pageable pageable);
 }
