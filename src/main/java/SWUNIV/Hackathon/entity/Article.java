@@ -30,4 +30,6 @@ public class Article extends BaseEntity {
 
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Picture> pictures;
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Vote> votes;
 }
