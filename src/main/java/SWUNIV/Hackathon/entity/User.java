@@ -38,8 +38,8 @@ public class User extends BaseEntity{
 
     private String email;
 
-    @OneToMany(mappedBy = "modifier", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Picture> pictures;
-    @OneToMany(mappedBy = "modifier", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Article> articles;
 }
