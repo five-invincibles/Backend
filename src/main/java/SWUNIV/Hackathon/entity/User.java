@@ -22,6 +22,7 @@ import java.util.Collection;
 @DynamicUpdate
 public class User extends BaseEntity{
 
+    @Setter
     private String name;
 
     private String kakaoID;
@@ -34,9 +35,11 @@ public class User extends BaseEntity{
 
     private String picturePath;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private University university;
 
+    @Setter
     private String email;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -5,6 +5,7 @@ import SWUNIV.Hackathon.dto.TokenRequest;
 import SWUNIV.Hackathon.dto.SignUpRequest;
 import SWUNIV.Hackathon.dto.UniversityResponse;
 import SWUNIV.Hackathon.dto.UserResponse;
+import SWUNIV.Hackathon.dto.UserUpdateRequest;
 import SWUNIV.Hackathon.enumerations.Authority;
 import SWUNIV.Hackathon.enumerations.University;
 import SWUNIV.Hackathon.exception.InvalidKakaoTokenException;
@@ -165,6 +166,46 @@ public class UserService {
         String id = jsonObject.get("id").getAsString();
 
         User user = userRepository.findUserByKakaoID(id);
+
+        final UserResponse userResponse = UserResponse.builder()
+            .name(user.getName())
+            .email(user.getEmail())
+            .picturePath(user.getPicturePath())
+            .university(user.getUniversity())
+            .build();
+
+        return userResponse;
+    }
+
+    public UserResponse update(UserUpdateRequest userUpdateRequest) {
+
+        final String kakaoID = userUpdateRequest.getKakaoID();
+
+        if (kakaoID == null) return null;
+
+        if (!userRepository.existsByKakaoID(kakaoID)) {
+            return null;
+        }
+
+        User user = userRepository.findUserByKakaoID(kakaoID);
+
+        final String email = userUpdateRequest.getEmail();
+
+        if (email != null) {
+            user.setEmail(email);
+        }
+
+        final String name = userUpdateRequest.getName();
+
+        if (name != null) {
+            user.setName(name);
+        }
+
+        final University university = userUpdateRequest.getUniversity();
+
+        if (university != null) {
+            user.setUniversity(university);
+        }
 
         final UserResponse userResponse = UserResponse.builder()
             .name(user.getName())

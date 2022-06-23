@@ -32,4 +32,6 @@ public interface CatRepository extends JpaRepository<Cat, Long>, GeometricCatRep
     boolean existsById(Long id);
 
     Boolean existsByCatName(String catName);
+
+    Cat findByCatName(String catName);
 }

@@ -18,6 +18,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicUpdate
+@Setter
 public class Cat extends BaseEntity {
 
     private String catName;

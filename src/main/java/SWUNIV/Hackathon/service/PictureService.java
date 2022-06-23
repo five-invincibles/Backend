@@ -1,6 +1,7 @@
 package SWUNIV.Hackathon.service;
 
 import SWUNIV.Hackathon.dto.PictureRequest;
+import SWUNIV.Hackathon.entity.Cat;
 import SWUNIV.Hackathon.entity.Picture;
 import SWUNIV.Hackathon.repository.CatRepository;
 import SWUNIV.Hackathon.repository.PictureRepository;
@@ -52,6 +53,8 @@ public class PictureService {
             return false;
         }
 
+        final Cat cat = catRepository.getById(catID);
+
         final Picture picture = Picture.builder()
             .description(pictureRequest.getDescription())
             .key(pictureKey)
@@ -59,11 +62,13 @@ public class PictureService {
             .uploadedDate(LocalDateTime.now())
             .latitude(pictureRequest.getLatitude())
             .longitude(pictureRequest.getLongitude())
-            .cat(catRepository.getById(catID))
+            .cat(cat)
             .author(userRepository.findUserByKakaoID(userKakaoID))
             .build();
 
         Picture saved = pictureRepository.save(picture);
+
+        catRepository.updateHabitat(cat);
 
         return true;
     }
