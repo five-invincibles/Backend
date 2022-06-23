@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.context.annotation.Lazy;
 
 @NoArgsConstructor
 public class GeometricCatRepositoryImpl implements GeometricCatRepository {

@@ -15,16 +15,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.UUID;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -34,30 +31,28 @@ public class PictureService {
     @Autowired
     private MinioService minioService;
 
-    private PictureRepository pictureRepository;
+    private final PictureRepository pictureRepository;
 
-    private CatRepository catRepository;
+    private final CatRepository catRepository;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public Boolean save(MultipartFile file, PictureRequest pictureRequest)
         throws UnsupportedEncodingException {
 
-        String filename = file.getOriginalFilename();
-
         final String pictureKey = upload(file);
-
-        //filename = URLEncoder.encode(filename, "UTF-8");
 
         final Long catID = pictureRequest.getCatID();
 
         final String userKakaoID = pictureRequest.getKakaoID();
 
         if (!catRepository.existsById(catID)) {
+            System.out.println("cat id");
             return false;
         }
 
         if (!userRepository.existsByKakaoID(userKakaoID)) {
+            System.out.println("kakao id");
             return false;
         }
 
@@ -65,7 +60,7 @@ public class PictureService {
             .description(pictureRequest.getDescription())
             .key(pictureKey)
             .title(pictureRequest.getTitle())
-            .uploadedDate(pictureRequest.getUploadedDate())
+            .uploadedDate(LocalDateTime.now())
             .latitude(pictureRequest.getLatitude())
             .longitude(pictureRequest.getLongitude())
             .cat(catRepository.getById(catID))
@@ -81,13 +76,9 @@ public class PictureService {
 
         String filename = file.getOriginalFilename();
 
-        System.out.println("filename = " + filename);
-
         final String id = UUID.randomUUID().toString();
 
         Path path = Path.of(filename);
-
-        System.out.println("path = " + path);
 
         try {
             minioService.upload(path, file.getInputStream(), file.getContentType());

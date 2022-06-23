@@ -27,8 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class PictureController {
 
     @Autowired
-    private MinioService minioService;
-    private PictureService pictureService;
+    private final MinioService minioService;
+    private final PictureService pictureService;
 
     @GetMapping("/list")
     public List<Item> photoList() throws MinioException {

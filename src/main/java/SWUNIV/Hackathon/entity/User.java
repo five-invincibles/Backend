@@ -34,6 +34,7 @@ public class User extends BaseEntity{
 
     private String picturePath;
 
+    @Enumerated(EnumType.STRING)
     private University university;
 
     private String email;
