@@ -7,6 +7,7 @@ import SWUNIV.Hackathon.entity.DMS;
 import SWUNIV.Hackathon.entity.Picture;
 import SWUNIV.Hackathon.repository.CatRepository;
 import SWUNIV.Hackathon.repository.PictureRepository;
+import SWUNIV.Hackathon.repository.UserRepository;
 import com.google.api.client.util.IOUtils;
 import com.jlefebure.spring.boot.minio.MinioException;
 import com.jlefebure.spring.boot.minio.MinioService;
@@ -37,6 +38,8 @@ public class PictureService {
 
     private CatRepository catRepository;
 
+    private UserRepository userRepository;
+
     public Boolean save(MultipartFile file, PictureRequest pictureRequest)
         throws UnsupportedEncodingException {
 
@@ -48,7 +51,13 @@ public class PictureService {
 
         final Long catID = pictureRequest.getCatID();
 
+        final String userKakaoID = pictureRequest.getKakaoID();
+
         if (!catRepository.existsById(catID)) {
+            return false;
+        }
+
+        if (!userRepository.existsByKakaoID(userKakaoID)) {
             return false;
         }
 
@@ -60,6 +69,7 @@ public class PictureService {
             .latitude(pictureRequest.getLatitude())
             .longitude(pictureRequest.getLongitude())
             .cat(catRepository.getById(catID))
+            .author(userRepository.findUserByKakaoID(userKakaoID))
             .build();
 
         Picture saved = pictureRepository.save(picture);
