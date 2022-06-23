@@ -34,12 +34,12 @@ public class CatController {
         return ResponseEntity.ok().body(catService.getDetails());
     }
 
-    @GetMapping("/location")
+    @PostMapping("/location")
     ResponseEntity<LocationResponse> getRecentLocation(@RequestBody CatNameRequest catNameRequest) {
         return ResponseEntity.ok().body(catService.getRecentLocation(catNameRequest));
     }
 
-    @GetMapping("/nearBy")
+    @PostMapping("/nearBy")
     ResponseEntity<CatListResponse> getCatListNearBy(@RequestBody SelfLocationRequest selfLocationRequest) {
         return ResponseEntity.ok().body(catService.getCatListNearBy(selfLocationRequest));
     }

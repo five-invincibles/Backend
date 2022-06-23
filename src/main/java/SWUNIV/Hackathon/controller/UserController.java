@@ -33,7 +33,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUniversities());
     }
 
-    @GetMapping("/me")
+    @PostMapping("/me")
     public ResponseEntity<UserResponse> me(@RequestBody TokenRequest tokenRequest) {
         return ResponseEntity.ok().body(userService.me(tokenRequest));
     }

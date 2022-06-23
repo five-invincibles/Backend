@@ -43,11 +43,5 @@ public class PictureController {
 
         return ResponseEntity.ok().body(booleanResponse);
     }
-
-    @PostMapping("/d/")
-    public ResponseEntity<BooleanResponse> save(@RequestBody PictureRequest pictureRequest) {
-        return ResponseEntity.ok().body(new BooleanResponse(false));
-    }
-
-    }
+}
 
