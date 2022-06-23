@@ -14,4 +14,6 @@ public interface PictureRepository extends CrudRepository<Picture, Long> {
             "abs(p.longitude._1 * 60 + p.longitude._2 - ?3 * 60 + ?4) <= 1 " +
             "and abs(p.latitude._1 * 60 + p.latitude._2 - ?1 * 60 + ?2) <= 1")
     List<Picture> picturesIn2Minute(int latDeg, int latMin, int lonDeg, int lonMin);
+
+    List<Picture> findByIdIn(List<Long> ids);
 }

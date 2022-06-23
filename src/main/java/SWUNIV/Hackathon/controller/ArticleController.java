@@ -1,5 +1,6 @@
 package SWUNIV.Hackathon.controller;
 
+import SWUNIV.Hackathon.dto.ArticleRepresentation;
 import SWUNIV.Hackathon.dto.ArticleWriteReqeust;
 import SWUNIV.Hackathon.entity.Article;
 import SWUNIV.Hackathon.repository.ArticleRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @NoArgsConstructor
@@ -28,41 +30,45 @@ public class ArticleController {
     }
 
     @GetMapping("/list")
-    public List<Article> listAll(
+    public List<ArticleRepresentation> listAll(
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "size", required = false) Integer size) {
         if (page == null) page = 0;
         if (size == null) size = 25;
-        return articleRepository.findAll(PageRequest.of(page, size)).toList();
+        return articleRepository.findAll(PageRequest.of(page, size)).stream()
+                .map(ArticleRepresentation::fromArticle)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/list/author/{kakao_id}")
-    public List<Article> listForAuthor(
+    public List<ArticleRepresentation> listForAuthor(
             @PathVariable("kakao_id") String kakaoID,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "size", required = false) Integer size) {
         if (page == null) page = 0;
         if (size == null) size = 25;
-        return articleRepository.findByAuthorKakaoID(kakaoID, PageRequest.of(page, size)).toList();
+        return articleRepository.findByAuthorKakaoID(kakaoID, PageRequest.of(page, size)).stream()
+                .map(ArticleRepresentation::fromArticle)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/list/cat/{cat_id}")
-    public List<Article> listForCat(
+    public List<ArticleRepresentation> listForCat(
             @PathVariable("cat_id") Long cat_id,
             @RequestParam(value = "page", required = false) Integer page,
             @RequestParam(value = "size", required = false) Integer size) {
         if (page == null) page = 0;
         if (size == null) size = 25;
-        return articleRepository.findByCatId(cat_id, PageRequest.of(page, size)).toList();
+        return articleRepository.findByCatId(cat_id, PageRequest.of(page, size)).stream()
+                .map(ArticleRepresentation::fromArticle)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/write")
-    public ResponseEntity<Long> writeArticle(@RequestBody ArticleWriteReqeust writeReqeust) {
-        try {
-            return ResponseEntity.ok(articleService.writeArticle(writeReqeust).getId());
-        } catch (IllegalStateException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ArticleRepresentation> writeArticle(@RequestBody ArticleWriteReqeust writeReqeust)
+            throws IllegalStateException {
+        Article article = articleService.writeArticle(writeReqeust);
+        return ResponseEntity.ok(ArticleRepresentation.fromArticle(article));
     }
 
     @DeleteMapping("/{article_id}")
@@ -70,5 +76,10 @@ public class ArticleController {
             @PathVariable("article_id") Long article_id,
             @RequestParam("kakao_id") String author_id) {
         return ResponseEntity.ok(articleService.deleteArticle(article_id, author_id));
+    }
+
+    @ExceptionHandler({IllegalStateException.class})
+    public ResponseEntity<String> handle(Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
