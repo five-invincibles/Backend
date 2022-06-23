@@ -42,4 +42,6 @@ public class User extends BaseEntity{
     private Collection<Picture> pictures;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Article> articles;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Collection<Bookmark> bookmarks;
 }

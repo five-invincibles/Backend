@@ -20,6 +20,12 @@ public class Cat extends BaseEntity {
     private String sex;
     private LocalDateTime lastModified;
 
+    @PrePersist
+    void preInsert() {
+        if (this.lastModified == null)
+            this.lastModified = LocalDateTime.now();
+    }
+
     @Embedded
     @AttributeOverride(name="_1", column = @Column(name = "latitude_1"))
     @AttributeOverride(name="_2", column = @Column(name = "latitude_2"))

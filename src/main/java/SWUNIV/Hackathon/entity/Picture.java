@@ -18,8 +18,14 @@ import java.time.LocalDateTime;
 public class Picture extends BaseEntity {
     private String description;
     private String key;
-    private String title;
+    private String title = "";
     private LocalDateTime uploadedDate;
+
+    @PrePersist
+    void preInsert() {
+        if (this.uploadedDate == null)
+            this.uploadedDate = LocalDateTime.now();
+    }
 
     @Embedded
     @AttributeOverride(name="_1", column = @Column(name = "latitude_1"))
@@ -40,4 +46,8 @@ public class Picture extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    private Article article;
 }
