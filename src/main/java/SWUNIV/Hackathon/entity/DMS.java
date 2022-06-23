@@ -1,6 +1,9 @@
 package SWUNIV.Hackathon.entity;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
+import lombok.NoArgsConstructor;
 
 /**
  * 도,분,초로 나타낸 각도를 표현한다.
@@ -8,6 +11,8 @@ import javax.persistence.Embeddable;
  * 북위 35도에서의 위경도 거리계산 메서드를 제공한다.
  */
 @Embeddable
+@NoArgsConstructor
+@Access(AccessType.FIELD)
 public class DMS implements Comparable<DMS> {
     int _1, _2;
     double _3;
