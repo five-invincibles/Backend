@@ -194,4 +194,28 @@ public class CatService {
     public List<Cat> list() {
         return catRepository.findAll();
     }
+
+    public Boolean removeBookmark(BookmarkRequest bookmarkRequest) {
+        final String catName = bookmarkRequest.getCatName();
+
+        final String kakaoID = bookmarkRequest.getKakaoID();
+
+        final Cat cat = catRepository.findByCatName(catName);
+
+        if (cat == null)
+            return false;
+
+        final User user = userRepository.findUserByKakaoID(kakaoID);
+
+        if (user == null)
+            return false;
+
+        final Bookmark bookmark = bookmarkRepository.findByCatAndUser(cat, user);
+
+        if (bookmark != null) { // 북마크가 있는 경우에만 북마크 삭제
+            bookmarkRepository.delete(bookmark);
+        }
+
+        return true;
+    }
 }

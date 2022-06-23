@@ -56,6 +56,11 @@ public class CatController {
         return ResponseEntity.ok().body(new BooleanResponse(catService.addBookmark(bookmarkRequest)));
     }
 
+    @DeleteMapping("/bookmark")
+    ResponseEntity<BooleanResponse> undoFavorite(@RequestBody BookmarkRequest bookmarkRequest) {
+        return ResponseEntity.ok().body(new BooleanResponse(catService.removeBookmark(bookmarkRequest)));
+    }
+
     @GetMapping("/list")
     ResponseEntity<List<Cat>> list() {
         return ResponseEntity.ok().body(catService.list());
