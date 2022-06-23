@@ -12,9 +12,11 @@ import SWUNIV.Hackathon.dto.PictureResponse;
 import SWUNIV.Hackathon.dto.SelfLocationRequest;
 import SWUNIV.Hackathon.entity.Bookmark;
 import SWUNIV.Hackathon.entity.Cat;
+import SWUNIV.Hackathon.repository.CatRepository;
 import SWUNIV.Hackathon.service.CatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class CatController {
 
     private final CatService catService;
+    @Autowired
+    private final CatRepository catRepository;
 
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<PictureResponse> register(@RequestPart("file") MultipartFile file, @RequestPart CatRequest catRequest) {
@@ -58,6 +62,11 @@ public class CatController {
     @PostMapping("/bookmark")
     ResponseEntity<BooleanResponse> favorite(@RequestBody BookmarkRequest bookmarkRequest) {
         return ResponseEntity.ok().body(new BooleanResponse(catService.addBookmark(bookmarkRequest)));
+    }
+
+    @GetMapping("/{cat_id}")
+    ResponseEntity<Cat> get(@PathVariable("cat_id") Long catId) {
+        return ResponseEntity.of(catRepository.findById(catId));
     }
 
     @DeleteMapping("/bookmark")
