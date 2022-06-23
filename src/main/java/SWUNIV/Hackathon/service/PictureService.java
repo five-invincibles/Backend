@@ -1,6 +1,7 @@
 package SWUNIV.Hackathon.service;
 
 import SWUNIV.Hackathon.dto.PictureRequest;
+import SWUNIV.Hackathon.dto.PictureResponse;
 import SWUNIV.Hackathon.entity.Cat;
 import SWUNIV.Hackathon.entity.Picture;
 import SWUNIV.Hackathon.repository.CatRepository;
@@ -14,6 +15,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ public class PictureService {
 
     private final UserRepository userRepository;
 
-    public Boolean save(MultipartFile file, PictureRequest pictureRequest)
+    public PictureResponse save(MultipartFile file, PictureRequest pictureRequest)
         throws UnsupportedEncodingException {
 
         final String pictureKey = upload(file);
@@ -44,22 +46,23 @@ public class PictureService {
         final String userKakaoID = pictureRequest.getKakaoID();
 
         if (!catRepository.existsById(catID)) {
-            System.out.println("cat id");
-            return false;
+            return null;
         }
 
         if (!userRepository.existsByKakaoID(userKakaoID)) {
             System.out.println("kakao id");
-            return false;
+            return null;
         }
+
+        LocalDateTime date = LocalDateTime.parse(pictureRequest.getDate(),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         final Cat cat = catRepository.getById(catID);
 
         final Picture picture = Picture.builder()
-            .description(pictureRequest.getDescription())
             .key(pictureKey)
-            .title(pictureRequest.getTitle())
             .uploadedDate(LocalDateTime.now())
+            .picturedDate(date)
             .latitude(pictureRequest.getLatitude())
             .longitude(pictureRequest.getLongitude())
             .cat(cat)
@@ -70,7 +73,7 @@ public class PictureService {
 
         catRepository.updateHabitat(cat);
 
-        return true;
+        return new PictureResponse(saved.getId(), saved.getKey());
     }
 
     public String upload(MultipartFile file) {

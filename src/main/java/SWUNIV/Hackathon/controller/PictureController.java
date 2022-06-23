@@ -2,6 +2,7 @@ package SWUNIV.Hackathon.controller;
 
 import SWUNIV.Hackathon.dto.BooleanResponse;
 import SWUNIV.Hackathon.dto.PictureRequest;
+import SWUNIV.Hackathon.dto.PictureResponse;
 import SWUNIV.Hackathon.service.PictureService;
 import com.jlefebure.spring.boot.minio.MinioException;
 import com.jlefebure.spring.boot.minio.MinioService;
@@ -30,18 +31,19 @@ public class PictureController {
     }
 
     @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<BooleanResponse> save(@RequestPart("file") MultipartFile file, @RequestPart PictureRequest pictureRequest) {
-
-        BooleanResponse booleanResponse;
+    public ResponseEntity<PictureResponse> save(@RequestPart("file") MultipartFile file, @RequestPart PictureRequest pictureRequest) {
+        PictureResponse pictureResponse = null;
 
         try {
-            booleanResponse = new BooleanResponse (pictureService.save(file, pictureRequest));
+            pictureResponse = pictureService.save(file, pictureRequest);
+            if (pictureResponse == null) throw new Exception();
         } catch (UnsupportedEncodingException uee) {
             uee.printStackTrace();
-            booleanResponse = new BooleanResponse (false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return ResponseEntity.ok().body(booleanResponse);
+        return ResponseEntity.ok().body(pictureResponse);
     }
 }
 
