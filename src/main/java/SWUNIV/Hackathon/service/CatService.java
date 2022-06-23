@@ -9,6 +9,7 @@ import SWUNIV.Hackathon.dto.CatListResponse;
 import SWUNIV.Hackathon.dto.CatRequest;
 import SWUNIV.Hackathon.dto.LocationResponse;
 import SWUNIV.Hackathon.dto.PictureRequest;
+import SWUNIV.Hackathon.dto.PictureResponse;
 import SWUNIV.Hackathon.dto.SelfLocationRequest;
 import SWUNIV.Hackathon.entity.Bookmark;
 import SWUNIV.Hackathon.entity.Cat;
@@ -40,9 +41,9 @@ public class CatService {
 
     private final BookmarkRepository bookmarkRepository;
 
-    public boolean register(MultipartFile file, CatRequest catRequest) {
+    public PictureResponse register(MultipartFile file, CatRequest catRequest) {
         if (catRepository.existsByCatName(catRequest.getCatName()))
-            return false;
+            return null;
 
         final PictureRequest pictureRequest = catRequest.getPictureRequest();
 
@@ -51,7 +52,7 @@ public class CatService {
         final DMS longitude = pictureRequest.getLongitude();
 
         if (!userRepository.existsByKakaoID(pictureRequest.getKakaoID())) {
-            return false;
+            return null;
         }
 
         final User modifier = userRepository.findUserByKakaoID(pictureRequest.getKakaoID());
@@ -72,16 +73,18 @@ public class CatService {
 
         pictureRequest.setCatID(savedCat.getId());
 
+        PictureResponse pictureResponse;
+
         try {
-            Boolean isSaved = pictureService.save(file, pictureRequest);
+            pictureResponse = pictureService.save(file, pictureRequest);
         } catch (UnsupportedEncodingException uee) {
             uee.printStackTrace();
-            return false;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return true;
+        return pictureResponse;
     }
 
     public CatDetailsResponse getDetails() {

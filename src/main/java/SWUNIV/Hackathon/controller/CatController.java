@@ -8,6 +8,7 @@ import SWUNIV.Hackathon.dto.CatNameRequest;
 import SWUNIV.Hackathon.dto.CatListResponse;
 import SWUNIV.Hackathon.dto.CatRequest;
 import SWUNIV.Hackathon.dto.LocationResponse;
+import SWUNIV.Hackathon.dto.PictureResponse;
 import SWUNIV.Hackathon.dto.SelfLocationRequest;
 import SWUNIV.Hackathon.entity.Bookmark;
 import SWUNIV.Hackathon.entity.Cat;
@@ -27,8 +28,9 @@ public class CatController {
     private final CatService catService;
 
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<BooleanResponse> register(@RequestPart("file") MultipartFile file, @RequestPart CatRequest catRequest) {
-        return ResponseEntity.ok().body(new BooleanResponse(catService.register(file, catRequest)));
+    ResponseEntity<PictureResponse> register(@RequestPart("file") MultipartFile file, @RequestPart CatRequest catRequest) {
+        if (catService.register(file, catRequest) == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(catService.register(file, catRequest));
     }
 
     @GetMapping("/details")
