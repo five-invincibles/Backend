@@ -3,21 +3,14 @@ package SWUNIV.Hackathon.controller;
 import SWUNIV.Hackathon.dto.ArticleWriteReqeust;
 import SWUNIV.Hackathon.entity.Article;
 import SWUNIV.Hackathon.repository.ArticleRepository;
-import SWUNIV.Hackathon.repository.CatRepository;
 import SWUNIV.Hackathon.service.ArticleService;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @NoArgsConstructor
@@ -70,5 +63,12 @@ public class ArticleController {
         } catch (IllegalStateException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/{article_id}")
+    public ResponseEntity<Boolean> deleteArticle(
+            @PathVariable("article_id") Long article_id,
+            @RequestParam("kakao_id") String author_id) {
+        return ResponseEntity.ok(articleService.deleteArticle(article_id, author_id));
     }
 }

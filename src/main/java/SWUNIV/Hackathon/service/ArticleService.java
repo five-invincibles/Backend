@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @NoArgsConstructor
 public class ArticleService {
@@ -40,5 +42,20 @@ public class ArticleService {
                         .cat(cat).author(author).comment(writeReqeust.getComment())
                         .build();
         return articleRepository.save(article);
+    }
+
+    public boolean deleteArticle(Long article_id, String author_id) {
+        Optional<Long> oArticleId = articleRepository.findById(article_id)
+                .map(article->article.getAuthor().getKakaoID())
+                .flatMap((String id) -> {
+                    if (author_id.equals(id))
+                        return Optional.of(article_id);
+                    else
+                        return Optional.empty();
+                });
+        // article_id가 존재하고 article의 작성자와 author_id가 같은 경우에만 이 옵셔널이 present이다.
+        oArticleId.ifPresent((id) ->
+                articleRepository.deleteById(article_id));
+        return oArticleId.isPresent();
     }
 }
