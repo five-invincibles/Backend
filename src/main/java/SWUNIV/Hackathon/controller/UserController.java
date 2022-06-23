@@ -5,6 +5,7 @@ import SWUNIV.Hackathon.dto.TokenRequest;
 import SWUNIV.Hackathon.dto.SignUpRequest;
 import SWUNIV.Hackathon.dto.UniversityResponse;
 import SWUNIV.Hackathon.dto.UserResponse;
+import SWUNIV.Hackathon.dto.UserUpdateRequest;
 import SWUNIV.Hackathon.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,4 +38,8 @@ public class UserController {
         return ResponseEntity.ok().body(userService.me(tokenRequest));
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest userUpdateRequest) {
+        return ResponseEntity.ok().body(userService.update(userUpdateRequest));
+    }
 }
