@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/picture")
 public class PictureController {
 
+    @Autowired
     private MinioService minioService;
     private PictureService pictureService;
 

@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.file.Path;
+import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,9 @@ public class PictureService {
 
         String filename = file.getOriginalFilename();
 
-        upload(file);
+        final String pictureKey = upload(file);
 
-        filename = URLEncoder.encode(filename, "UTF-8");
+        //filename = URLEncoder.encode(filename, "UTF-8");
 
         final Long catID = pictureRequest.getCatID();
 
@@ -53,7 +54,7 @@ public class PictureService {
 
         final Picture picture = Picture.builder()
             .description(pictureRequest.getDescription())
-            .filename(filename)
+            .key(pictureKey)
             .title(pictureRequest.getTitle())
             .uploadedDate(pictureRequest.getUploadedDate())
             .latitude(pictureRequest.getLatitude())
@@ -66,11 +67,18 @@ public class PictureService {
         return true;
     }
 
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
 
         String filename = file.getOriginalFilename();
 
+        System.out.println("filename = " + filename);
+
+        final String id = UUID.randomUUID().toString();
+
         Path path = Path.of(filename);
+
+        System.out.println("path = " + path);
+
         try {
             minioService.upload(path, file.getInputStream(), file.getContentType());
         } catch (MinioException e) {
@@ -78,6 +86,8 @@ public class PictureService {
         } catch (IOException e) {
             throw new IllegalStateException("The file cannot be read", e);
         }
+
+        return id;
     }
 
     public void getPhoto(String object) throws MinioException, IOException {
