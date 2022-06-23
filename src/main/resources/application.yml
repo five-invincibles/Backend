@@ -32,6 +32,8 @@ spring:
       authority: ath
       email: eml
       platform-id: pid
+
+
   servlet:
     multipart:
       max-file-size: 3MB

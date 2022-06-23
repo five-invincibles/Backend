@@ -1,14 +1,10 @@
 package SWUNIV.Hackathon.service;
 
-import SWUNIV.Hackathon.dto.BooleanResponse;
 import SWUNIV.Hackathon.dto.PictureRequest;
-import SWUNIV.Hackathon.entity.Cat;
-import SWUNIV.Hackathon.entity.DMS;
 import SWUNIV.Hackathon.entity.Picture;
 import SWUNIV.Hackathon.repository.CatRepository;
 import SWUNIV.Hackathon.repository.PictureRepository;
 import SWUNIV.Hackathon.repository.UserRepository;
-import com.google.api.client.util.IOUtils;
 import com.jlefebure.spring.boot.minio.MinioException;
 import com.jlefebure.spring.boot.minio.MinioService;
 import java.io.File;

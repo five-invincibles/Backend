@@ -1,13 +1,14 @@
 package SWUNIV.Hackathon.dto;
 
 import SWUNIV.Hackathon.entity.DMS;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class PictureRequest {
 
     private String description;

@@ -3,20 +3,14 @@ package SWUNIV.Hackathon.controller;
 import SWUNIV.Hackathon.dto.BooleanResponse;
 import SWUNIV.Hackathon.dto.PictureRequest;
 import SWUNIV.Hackathon.service.PictureService;
-import com.google.api.client.util.IOUtils;
 import com.jlefebure.spring.boot.minio.MinioException;
 import com.jlefebure.spring.boot.minio.MinioService;
 import io.minio.messages.Item;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.file.Path;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,8 +29,8 @@ public class PictureController {
         return minioService.list();
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<BooleanResponse> save(@RequestParam("file") MultipartFile file, @RequestBody PictureRequest pictureRequest) {
+    @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<BooleanResponse> save(@RequestPart("file") MultipartFile file, @RequestPart PictureRequest pictureRequest) {
 
         BooleanResponse booleanResponse;
 
@@ -49,5 +43,11 @@ public class PictureController {
 
         return ResponseEntity.ok().body(booleanResponse);
     }
-}
+
+    @PostMapping("/d/")
+    public ResponseEntity<BooleanResponse> save(@RequestBody PictureRequest pictureRequest) {
+        return ResponseEntity.ok().body(new BooleanResponse(false));
+    }
+
+    }
 

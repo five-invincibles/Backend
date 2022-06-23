@@ -21,8 +21,8 @@ public interface CatRepository extends JpaRepository<Cat, Long>, GeometricCatRep
      * @return 고양이들의 목록
      */
     @Query("select c from Cat c where " +
-            "abs(c.longitude._1 * 60 + c.longitude._2 - ?3 * 60 + ?4) <= 1 " +
-            "and abs(c.latitude._1 * 60 + c.latitude._2 - ?1 * 60 + ?2) <= 1")
+            "abs(c.longitude.degree * 60 + c.longitude.minute - ?3 * 60 + ?4) <= 1 " +
+            "and abs(c.latitude.degree * 60 + c.latitude.minute - ?1 * 60 + ?2) <= 1")
     List<Cat> findCatsIn2Minute(int latDeg, int latMin, int lonDeg, int lonMin);
 
     @Query("select p from Picture p inner join p.cat c on c.id = :cat_id " +

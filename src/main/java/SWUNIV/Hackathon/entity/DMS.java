@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 도,분,초로 나타낸 각도를 표현한다.
@@ -12,30 +13,31 @@ import lombok.NoArgsConstructor;
  */
 @Embeddable
 @NoArgsConstructor
+@ToString
 @Access(AccessType.FIELD)
 public class DMS implements Comparable<DMS> {
-    int _1, _2;
-    double _3;
+    int degree, minute;
+    double second;
 
     public int getDegree() {
-        return _1;
+        return degree;
     }
     public int getMinute() {
-        return _2;
+        return minute;
     }
     public double getSecond() {
-        return _3;
+        return second;
     }
     /**
      * 도,분,초로 나타낸 각도를 표현하는 DMS 객체를 생성한다.
-     * @param $1 도(degree)
-     * @param $2 분(minute)
-     * @param $3 초(second)
+     * @param degree 도(degree)
+     * @param minute 분(minute)
+     * @param second 초(second)
      */
-    public DMS(int $1, int $2, double $3) {
-        _1 = $1;
-        _2 = $2;
-        _3 = $3;
+    public DMS(int degree, int minute, double second) {
+        this.degree = degree;
+        this.minute = minute;
+        this.second = second;
     }
 
     /**
@@ -49,19 +51,19 @@ public class DMS implements Comparable<DMS> {
             u = v;
             v = this;
         } // u가 더 큰 것
-        double d3 = u._3 - v._3;
+        double d3 = u.second - v.second;
         int carry = 0;
         if (d3 < 0) {
             d3 += 60;
             carry = -1;
         }
-        int d2 = u._2 - v._2 + carry;
+        int d2 = u.minute - v.minute + carry;
         carry = 0;
         if (d2 < 0) {
             d2 += 60;
             carry = -1;
         }
-        int d1 = u._1 - v._1 + carry; // d1은 반드시 0이상임
+        int d1 = u.degree - v.degree + carry; // d1은 반드시 0이상임
         return new DMS(d1, d2, d3);
     }
 
@@ -71,11 +73,11 @@ public class DMS implements Comparable<DMS> {
      * @return this가 크면 1, 같으면 0, v가 크면 -1
      */
     public int compareTo(DMS v) {
-        if (_1 > v._1) return 1;
-        if (_1 < v._1) return -1;
-        if (_2 > v._2) return 1;
-        if (_2 < v._2) return -1;
-        return Double.compare(_3, v._3);
+        if (degree > v.degree) return 1;
+        if (degree < v.degree) return -1;
+        if (minute > v.minute) return 1;
+        if (minute < v.minute) return -1;
+        return Double.compare(second, v.second);
     }
 
     /**
@@ -85,9 +87,9 @@ public class DMS implements Comparable<DMS> {
     public double latitudeToMeterIn35Degree() {
         // 위도 35도 부근에서 위도 1도의 길이(meter)
         int latitudeMeter = 110941;
-        return _1 * latitudeMeter
-                + _2 * (latitudeMeter / 60.)
-                + _3 * (latitudeMeter / 3600.);
+        return degree * latitudeMeter
+                + minute * (latitudeMeter / 60.)
+                + second * (latitudeMeter / 3600.);
     }
 
     /**
@@ -97,8 +99,8 @@ public class DMS implements Comparable<DMS> {
     public double longitudeToMeterIn35Degree() {
         // 위도 35도에서 경도 1도의 길이(meter)
         int longitudeMeter = 91290;
-        return _1 * longitudeMeter
-                + _2 * (longitudeMeter / 60.)
-                + _3 * (longitudeMeter / 3600.);
+        return degree * longitudeMeter
+                + minute * (longitudeMeter / 60.)
+                + second * (longitudeMeter / 3600.);
     }
 }
