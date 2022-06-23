@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 public class Picture extends BaseEntity {
     private String description;
-
-    private String path;
+    private String filename;
     private String title;
     private LocalDateTime uploadedDate;
 

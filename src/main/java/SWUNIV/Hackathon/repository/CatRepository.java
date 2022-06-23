@@ -29,4 +29,5 @@ public interface CatRepository extends JpaRepository<Cat, Long>, GeometricCatRep
             "where p.uploadedDate > :start")
     List<Picture> findRecentPictureOfCat(@Param("cat_id") Long cat_id, @Param("start") LocalDateTime startDate);
 
+    boolean existsById(Long id);
 }
