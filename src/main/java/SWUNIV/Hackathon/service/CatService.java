@@ -162,7 +162,7 @@ public class CatService {
         return true;
     }
 
-    public boolean bookmark(BookmarkRequest bookmarkRequest) {
+    public boolean addBookmark(BookmarkRequest bookmarkRequest) {
         final String catName = bookmarkRequest.getCatName();
 
         final String kakaoID = bookmarkRequest.getKakaoID();
@@ -177,12 +177,16 @@ public class CatService {
 
         final User user = userRepository.findUserByKakaoID(kakaoID);
 
-        final Bookmark bookmark = Bookmark.builder()
-            .cat(cat)
-            .user(user)
-            .build();
+        final Bookmark bookmark = bookmarkRepository.findByCatAndUser(cat, user);
 
-        bookmarkRepository.save(bookmark);
+        if (bookmark == null) { // 북마크가 없는 경우에만 북마크 추가
+            final Bookmark newBookmark = Bookmark.builder()
+                    .cat(cat)
+                    .user(user)
+                    .build();
+
+            bookmarkRepository.save(newBookmark);
+        }
 
         return true;
     }
