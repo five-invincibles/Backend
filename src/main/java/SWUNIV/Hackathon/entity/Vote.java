@@ -24,5 +24,5 @@ public class Vote extends BaseEntity {
     @JoinColumn(name = "article_id")
     Article article;
 
-    boolean hidden = false;
+    boolean unvote = false;
 }

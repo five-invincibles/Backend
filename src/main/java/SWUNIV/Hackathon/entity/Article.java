@@ -18,8 +18,6 @@ import java.util.List;
 public class Article extends BaseEntity {
     private String comment;
 
-    private int vote = 0;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User author;
@@ -32,4 +30,8 @@ public class Article extends BaseEntity {
     private List<Picture> pictures;
     @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Vote> votes;
+
+    public int getVote() {
+        return votes.size();
+    }
 }

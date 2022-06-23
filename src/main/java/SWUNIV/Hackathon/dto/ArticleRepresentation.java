@@ -5,12 +5,14 @@ import SWUNIV.Hackathon.entity.Picture;
 import SWUNIV.Hackathon.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Builder
+@Getter
 public class ArticleRepresentation {
     @AllArgsConstructor
     static public class PictureRepresentation {
