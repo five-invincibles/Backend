@@ -33,7 +33,9 @@ public class CatController {
 
     @GetMapping("/details")
     ResponseEntity<CatDetailsResponse> details() {
-        return ResponseEntity.ok().body(catService.getDetails());
+        CatDetailsResponse details = catService.getDetails();
+        System.out.println("details = " + details);
+        return ResponseEntity.ok().body(details);
     }
 
     @PostMapping("/location")

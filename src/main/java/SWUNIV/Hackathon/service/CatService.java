@@ -91,6 +91,8 @@ public class CatService {
             catDetails.add(catDetail.getValue());
         }
 
+        System.out.println("catDetails = " + catDetails);
+
         return new CatDetailsResponse(catDetails);
     }
 
