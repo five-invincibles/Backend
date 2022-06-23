@@ -27,4 +27,6 @@ public class PictureRequest {
     private DMS longitude;
 
     private Long catID;
+
+    private String kakaoID;
 }
