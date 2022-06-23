@@ -2,9 +2,11 @@ package SWUNIV.Hackathon.controller;
 
 import SWUNIV.Hackathon.dto.ArticleRepresentation;
 import SWUNIV.Hackathon.dto.ArticleWriteReqeust;
+import SWUNIV.Hackathon.dto.VoteRequest;
 import SWUNIV.Hackathon.entity.Article;
 import SWUNIV.Hackathon.repository.ArticleRepository;
 import SWUNIV.Hackathon.service.ArticleService;
+import SWUNIV.Hackathon.service.VoteService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,7 +27,8 @@ public class ArticleController {
     @Autowired
     public void setBeans(
             ArticleRepository articleRepository,
-            ArticleService articleService) {
+            ArticleService articleService,
+            VoteService voteService) {
         this.articleRepository = articleRepository;
         this.articleService = articleService;
     }
@@ -76,6 +80,12 @@ public class ArticleController {
             @PathVariable("article_id") Long article_id,
             @RequestParam("kakao_id") String author_id) {
         return ResponseEntity.ok(articleService.deleteArticle(article_id, author_id));
+    }
+
+    @PostMapping("/vote/{article_id}")
+    public ResponseEntity<Boolean> vote(@RequestBody VoteRequest voteRequest)
+            throws IllegalStateException {
+        return ResponseEntity.ok(articleService.vote(voteRequest));
     }
 
     @ExceptionHandler({IllegalStateException.class})
