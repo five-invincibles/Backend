@@ -32,7 +32,7 @@ public class ArticleRepresentation {
         User author = article.getAuthor();
         List<PictureRepresentation> pictures = new ArrayList<>();
         for (Picture pic : article.getPictures()) {
-            pictures.add(new PictureRepresentation(pic.getId(), pic.getKey()));
+            pictures.add(new PictureRepresentation(pic.getId(), pic.getPictureKey()));
         }
         return ArticleRepresentation.builder()
                 .authorName(author.getName())

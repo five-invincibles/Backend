@@ -20,7 +20,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-#    properties:
+    generate-ddl: true
+  #    properties:
 #      hibernate:
 #        dialect: org.hibernate.dialect.H2Dialect
 

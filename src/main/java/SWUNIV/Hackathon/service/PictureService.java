@@ -60,7 +60,7 @@ public class PictureService {
         final Cat cat = catRepository.getById(catID);
 
         final Picture picture = Picture.builder()
-            .key(pictureKey)
+            .pictureKey(pictureKey)
             .uploadedDate(LocalDateTime.now())
             .picturedDate(date)
             .latitude(pictureRequest.getLatitude())
@@ -73,7 +73,7 @@ public class PictureService {
 
         catRepository.updateHabitat(cat);
 
-        return new PictureResponse(saved.getId(), saved.getKey());
+        return new PictureResponse(saved.getId(), saved.getPictureKey());
     }
 
     public String upload(MultipartFile file) {

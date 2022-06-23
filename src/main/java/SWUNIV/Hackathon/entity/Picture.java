@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @DynamicUpdate
 public class Picture extends BaseEntity {
-    private String key;
+    private String pictureKey;
+
     private LocalDateTime uploadedDate;
 
     private LocalDateTime picturedDate;
