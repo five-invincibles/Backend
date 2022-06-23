@@ -33,6 +33,12 @@ public class Cat extends BaseEntity {
 
     private LocalDateTime lastModified;
 
+    @PrePersist
+    void preInsert() {
+        if (this.lastModified == null)
+            this.lastModified = LocalDateTime.now();
+    }
+  
     @ElementCollection
     private List<String> details = new ArrayList<>();
 
