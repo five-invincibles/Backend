@@ -55,7 +55,12 @@ public class CatController {
 
     @PostMapping("/bookmark")
     ResponseEntity<BooleanResponse> favorite(@RequestBody BookmarkRequest bookmarkRequest) {
-        return ResponseEntity.ok().body(new BooleanResponse(catService.bookmark(bookmarkRequest)));
+        return ResponseEntity.ok().body(new BooleanResponse(catService.addBookmark(bookmarkRequest)));
+    }
+
+    @DeleteMapping("/bookmark")
+    ResponseEntity<BooleanResponse> undoFavorite(@RequestBody BookmarkRequest bookmarkRequest) {
+        return ResponseEntity.ok().body(new BooleanResponse(catService.removeBookmark(bookmarkRequest)));
     }
 
     @GetMapping("/list")

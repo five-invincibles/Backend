@@ -164,7 +164,7 @@ public class CatService {
         return true;
     }
 
-    public boolean bookmark(BookmarkRequest bookmarkRequest) {
+    public boolean addBookmark(BookmarkRequest bookmarkRequest) {
         final String catName = bookmarkRequest.getCatName();
 
         final String kakaoID = bookmarkRequest.getKakaoID();
@@ -179,17 +179,45 @@ public class CatService {
 
         final User user = userRepository.findUserByKakaoID(kakaoID);
 
-        final Bookmark bookmark = Bookmark.builder()
-            .cat(cat)
-            .user(user)
-            .build();
+        final Bookmark bookmark = bookmarkRepository.findByCatAndUser(cat, user);
 
-        bookmarkRepository.save(bookmark);
+        if (bookmark == null) { // 북마크가 없는 경우에만 북마크 추가
+            final Bookmark newBookmark = Bookmark.builder()
+                    .cat(cat)
+                    .user(user)
+                    .build();
+
+            bookmarkRepository.save(newBookmark);
+        }
 
         return true;
     }
 
     public List<Cat> list() {
         return catRepository.findAll();
+    }
+
+    public Boolean removeBookmark(BookmarkRequest bookmarkRequest) {
+        final String catName = bookmarkRequest.getCatName();
+
+        final String kakaoID = bookmarkRequest.getKakaoID();
+
+        final Cat cat = catRepository.findByCatName(catName);
+
+        if (cat == null)
+            return false;
+
+        final User user = userRepository.findUserByKakaoID(kakaoID);
+
+        if (user == null)
+            return false;
+
+        final Bookmark bookmark = bookmarkRepository.findByCatAndUser(cat, user);
+
+        if (bookmark != null) { // 북마크가 있는 경우에만 북마크 삭제
+            bookmarkRepository.delete(bookmark);
+        }
+
+        return true;
     }
 }
