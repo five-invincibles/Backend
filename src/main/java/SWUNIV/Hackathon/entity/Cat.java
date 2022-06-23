@@ -34,7 +34,7 @@ public class Cat extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    private User author;
+    private User modifier;
 
     @OneToMany(mappedBy = "cat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Picture> pictures;
