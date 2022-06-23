@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -54,8 +55,12 @@ public class PictureService {
             return null;
         }
 
-        LocalDateTime date = LocalDateTime.parse(pictureRequest.getDate(),
+        System.out.println("data : " + pictureRequest.getDate());
+
+        LocalDate date = LocalDate.parse(pictureRequest.getDate(),
             DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        System.out.println("date = " + date);
 
         final Cat cat = catRepository.getById(catID);
 

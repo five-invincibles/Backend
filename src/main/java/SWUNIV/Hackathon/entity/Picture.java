@@ -1,5 +1,6 @@
 package SWUNIV.Hackathon.entity;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class Picture extends BaseEntity {
 
     private LocalDateTime uploadedDate;
 
-    private LocalDateTime picturedDate;
+    private LocalDate picturedDate;
 
     @PrePersist
     void preInsert() {
