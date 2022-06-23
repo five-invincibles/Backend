@@ -3,6 +3,8 @@ package SWUNIV.Hackathon.entity;
 import SWUNIV.Hackathon.enumerations.CatAge;
 import SWUNIV.Hackathon.enumerations.CatSpecies;
 import SWUNIV.Hackathon.enumerations.CatSex;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -31,7 +33,8 @@ public class Cat extends BaseEntity {
 
     private LocalDateTime lastModified;
 
-    private String details;
+    @ElementCollection
+    private List<String> details = new ArrayList<>();
 
     @Embedded
     @AttributeOverride(name="_1", column = @Column(name = "latitude_1"))

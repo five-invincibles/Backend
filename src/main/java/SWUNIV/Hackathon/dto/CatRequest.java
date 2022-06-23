@@ -6,6 +6,7 @@ import SWUNIV.Hackathon.enumerations.CatAge;
 import SWUNIV.Hackathon.enumerations.CatSex;
 import SWUNIV.Hackathon.enumerations.CatSpecies;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -29,11 +30,7 @@ public class CatRequest {
 
     private CatSex sex;
 
-    private String details;
+    private List<String> details;
 
-    private DMS latitude;
-
-    private DMS longitude;
-
-    private String kakaoID;
+    private PictureRequest pictureRequest;
 }

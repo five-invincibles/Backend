@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.context.annotation.Lazy;
 
 public class GeometricCatRepositoryImpl implements GeometricCatRepository {
     @Autowired
+    @Lazy
     CatRepository catRepository;
 
     @Override
