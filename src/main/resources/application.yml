@@ -50,4 +50,3 @@ spring:
 
 loggin.level:
   org.hibernate.type: trace
-

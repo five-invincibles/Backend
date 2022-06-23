@@ -186,4 +186,8 @@ public class CatService {
 
         return true;
     }
+
+    public List<Cat> list() {
+        return catRepository.findAll();
+    }
 }

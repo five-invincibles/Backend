@@ -10,7 +10,9 @@ import SWUNIV.Hackathon.dto.CatRequest;
 import SWUNIV.Hackathon.dto.LocationResponse;
 import SWUNIV.Hackathon.dto.SelfLocationRequest;
 import SWUNIV.Hackathon.entity.Bookmark;
+import SWUNIV.Hackathon.entity.Cat;
 import SWUNIV.Hackathon.service.CatService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,5 +54,10 @@ public class CatController {
     @PostMapping("/bookmark")
     ResponseEntity<BooleanResponse> favorite(@RequestBody BookmarkRequest bookmarkRequest) {
         return ResponseEntity.ok().body(new BooleanResponse(catService.bookmark(bookmarkRequest)));
+    }
+
+    @GetMapping("/list")
+    ResponseEntity<List<Cat>> list() {
+        return ResponseEntity.ok().body(catService.list());
     }
 }
