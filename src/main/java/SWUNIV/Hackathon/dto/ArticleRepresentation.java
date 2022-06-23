@@ -17,8 +17,6 @@ public class ArticleRepresentation {
     @AllArgsConstructor
     static public class PictureRepresentation {
         Long id;
-        String title;
-        String description;
         String imageKey;
     }
     Long id;
@@ -34,7 +32,7 @@ public class ArticleRepresentation {
         User author = article.getAuthor();
         List<PictureRepresentation> pictures = new ArrayList<>();
         for (Picture pic : article.getPictures()) {
-            pictures.add(new PictureRepresentation(pic.getId(), pic.getTitle(), pic.getDescription(), pic.getKey()));
+            pictures.add(new PictureRepresentation(pic.getId(), pic.getKey()));
         }
         return ArticleRepresentation.builder()
                 .authorName(author.getName())
