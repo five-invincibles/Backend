@@ -1,13 +1,15 @@
 package SWUNIV.Hackathon.controller;
 
+import SWUNIV.Hackathon.dto.BookmarkRequest;
 import SWUNIV.Hackathon.dto.BooleanResponse;
 import SWUNIV.Hackathon.dto.CatDetailsResponse;
 import SWUNIV.Hackathon.dto.CatUpdateRequest;
-import SWUNIV.Hackathon.dto.FindCatRequest;
+import SWUNIV.Hackathon.dto.CatNameRequest;
 import SWUNIV.Hackathon.dto.CatListResponse;
 import SWUNIV.Hackathon.dto.CatRequest;
 import SWUNIV.Hackathon.dto.LocationResponse;
 import SWUNIV.Hackathon.dto.SelfLocationRequest;
+import SWUNIV.Hackathon.entity.Bookmark;
 import SWUNIV.Hackathon.service.CatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -33,8 +35,8 @@ public class CatController {
     }
 
     @GetMapping("/location")
-    ResponseEntity<LocationResponse> getRecentLocation(@RequestBody FindCatRequest findCatRequest) {
-        return ResponseEntity.ok().body(catService.getRecentLocation(findCatRequest));
+    ResponseEntity<LocationResponse> getRecentLocation(@RequestBody CatNameRequest catNameRequest) {
+        return ResponseEntity.ok().body(catService.getRecentLocation(catNameRequest));
     }
 
     @GetMapping("/nearBy")
@@ -45,5 +47,10 @@ public class CatController {
     @PostMapping("/update")
     ResponseEntity<BooleanResponse> update(@RequestBody CatUpdateRequest catUpdateRequest) {
         return ResponseEntity.ok().body(new BooleanResponse(catService.update(catUpdateRequest)));
+    }
+
+    @PostMapping("/bookmark")
+    ResponseEntity<BooleanResponse> favorite(@RequestBody BookmarkRequest bookmarkRequest) {
+        return ResponseEntity.ok().body(new BooleanResponse(catService.bookmark(bookmarkRequest)));
     }
 }

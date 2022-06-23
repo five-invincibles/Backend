@@ -15,6 +15,8 @@ public class CatUpdateRequest {
 
     private String catName;
 
+    private String kakaoID;
+
     @Nullable
     private CatSpecies species;
 

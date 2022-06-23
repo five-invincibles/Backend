@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class FindCatRequest {
+public class CatNameRequest {
 
     private String catName;
 }
