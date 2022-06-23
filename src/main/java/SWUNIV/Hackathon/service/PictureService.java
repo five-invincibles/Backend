@@ -15,16 +15,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.util.UUID;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -43,7 +39,7 @@ public class PictureService {
     public Boolean save(MultipartFile file, PictureRequest pictureRequest)
         throws UnsupportedEncodingException {
 
-        String filename = file.getOriginalFilename();
+        //String filename = file.getOriginalFilename();
 
         final String pictureKey = upload(file);
 

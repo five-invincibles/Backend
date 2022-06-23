@@ -1,5 +1,8 @@
 package SWUNIV.Hackathon.entity;
 
+import SWUNIV.Hackathon.enumerations.CatAge;
+import SWUNIV.Hackathon.enumerations.CatSpecies;
+import SWUNIV.Hackathon.enumerations.CatSex;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -14,11 +17,21 @@ import java.util.Collection;
 @AllArgsConstructor
 @DynamicUpdate
 public class Cat extends BaseEntity {
+
     private String catName;
-    private String species;
-    private Long age;
-    private String sex;
+
+    @Enumerated(EnumType.STRING)
+    private CatSpecies species;
+
+    @Enumerated(EnumType.STRING)
+    private CatAge age;
+
+    @Enumerated(EnumType.STRING)
+    private CatSex sex;
+
     private LocalDateTime lastModified;
+
+    private String details;
 
     @Embedded
     @AttributeOverride(name="_1", column = @Column(name = "latitude_1"))
