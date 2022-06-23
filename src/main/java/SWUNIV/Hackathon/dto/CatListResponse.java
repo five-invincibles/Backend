@@ -1,13 +1,13 @@
 package SWUNIV.Hackathon.dto;
 
-
+import SWUNIV.Hackathon.entity.Cat;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
+@Getter
 @AllArgsConstructor
-public class CatDetailsResponse {
+public class CatListResponse {
 
-    List<String> catDetails;
+    private List<Cat> catList;
 }

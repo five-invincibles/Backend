@@ -1,6 +1,7 @@
 package SWUNIV.Hackathon.service;
 
 import SWUNIV.Hackathon.dto.PictureRequest;
+import SWUNIV.Hackathon.entity.Cat;
 import SWUNIV.Hackathon.entity.Picture;
 import SWUNIV.Hackathon.repository.CatRepository;
 import SWUNIV.Hackathon.repository.PictureRepository;
