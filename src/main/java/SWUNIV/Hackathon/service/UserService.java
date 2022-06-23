@@ -6,6 +6,8 @@ import SWUNIV.Hackathon.dto.SignUpRequest;
 import SWUNIV.Hackathon.dto.UniversityResponse;
 import SWUNIV.Hackathon.dto.UserResponse;
 import SWUNIV.Hackathon.dto.UserUpdateRequest;
+import SWUNIV.Hackathon.entity.Bookmark;
+import SWUNIV.Hackathon.entity.Cat;
 import SWUNIV.Hackathon.enumerations.Authority;
 import SWUNIV.Hackathon.enumerations.University;
 import SWUNIV.Hackathon.exception.InvalidKakaoTokenException;
@@ -16,6 +18,8 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -215,5 +219,12 @@ public class UserService {
             .build();
 
         return userResponse;
+    }
+
+    public List<Cat> bookmarkedCats(String kakaoID) {
+        User user = userRepository.findUserByKakaoID(kakaoID);
+        return user.getBookmarks().stream()
+                .map(Bookmark::getCat)
+                .collect(Collectors.toList());
     }
 }
